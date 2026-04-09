@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MORTH Dashboard</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" />
+
+  <!-- Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" />
+
+  <!-- Dashboard CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <span class="header-logo material-icons-outlined">account_balance</span>
+      <h1 class="header-title">MORTH Dashboard</h1>
+    </div>
+    <div class="header-right">
+      <span class="header-subtitle">Ministry of Road Transport & Highways</span>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Stat Cards Row -->
+    <div class="stat-cards">
+      <div class="stat-card" data-color="blue">
+        <div class="stat-card-content">
+          <span class="stat-card-title">Total Projects</span>
+          <span class="stat-card-count" id="card-total">0</span>
+        </div>
+        <div class="stat-card-icon blue-bg">
+          <span class="material-icons-outlined">folder_open</span>
+        </div>
+        <div class="stat-card-accent blue-accent"></div>
+      </div>
+
+      <div class="stat-card" data-color="purple">
+        <div class="stat-card-content">
+          <span class="stat-card-title">Completed</span>
+          <span class="stat-card-count" id="card-completed">0</span>
+        </div>
+        <div class="stat-card-icon purple-bg">
+          <span class="material-icons-outlined">check_circle</span>
+        </div>
+        <div class="stat-card-accent purple-accent"></div>
+      </div>
+
+      <div class="stat-card" data-color="orange">
+        <div class="stat-card-content">
+          <span class="stat-card-title">In Progress</span>
+          <span class="stat-card-count" id="card-progress">0</span>
+        </div>
+        <div class="stat-card-icon orange-bg">
+          <span class="material-icons-outlined">pending_actions</span>
+        </div>
+        <div class="stat-card-accent orange-accent"></div>
+      </div>
+
+      <div class="stat-card" data-color="green">
+        <div class="stat-card-content">
+          <span class="stat-card-title">Total Length (km)</span>
+          <span class="stat-card-count" id="card-length">0</span>
+        </div>
+        <div class="stat-card-icon green-bg">
+          <span class="material-icons-outlined">straighten</span>
+        </div>
+        <div class="stat-card-accent green-accent"></div>
+      </div>
+    </div>
+
+    <!-- Map + Right Panel -->
+    <div class="dashboard-grid">
+
+      <!-- Left: Map Section -->
+      <div class="map-wrapper">
+        <div class="map-paper">
+          <div class="map-header">
+            <h2 class="map-title">Map Analysis</h2>
+          </div>
+
+          <div class="map-container" id="map-container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb" id="breadcrumb">
+              <span class="breadcrumb-item breadcrumb-india" id="bc-india" onclick="resetToCountry()">India</span>
+            </div>
+
+            <!-- Loading overlay -->
+            <div class="map-loading" id="map-loading">
+              <div class="spinner"></div>
+              <span>Loading map data...</span>
+            </div>
+
+            <!-- Leaflet map -->
+            <div id="map"></div>
+
+            <!-- Legend -->
+            <div class="map-legend" id="map-legend">
+              <div class="legend-title">Completion %</div>
+              <div class="legend-item"><span class="legend-color" style="background:#2E7D32"></span> &gt; 90%</div>
+              <div class="legend-item"><span class="legend-color" style="background:#8BC34A"></span> 80% - 90%</div>
+              <div class="legend-item"><span class="legend-color" style="background:#FFC107"></span> 70% - 80%</div>
+              <div class="legend-item"><span class="legend-color" style="background:#F44336"></span> &lt; 70%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Details Panel -->
+      <div class="right-panel" id="right-panel">
+
+        <!-- Analytics View (default) -->
+        <div class="panel-view active" id="view-analytics">
+          <div class="analytics-card">
+            <div class="analytics-header">
+              <span class="material-icons-outlined">bar_chart</span>
+              <span>State-wise Summary</span>
+            </div>
+            <div class="analytics-body" id="state-summary-list">
+              <div class="analytics-placeholder">Click a state on the map to view details</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Districts View -->
+        <div class="panel-view" id="view-districts">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <span class="panel-card-title" id="district-panel-title">Districts</span>
+              <button class="panel-close-btn" onclick="showAnalytics()">&times;</button>
+            </div>
+            <div class="panel-table-header district-grid">
+              <span class="col-left">District Name</span>
+              <span class="col-right">Total</span>
+              <span class="col-right">Pending</span>
+              <span class="col-right">Completion %</span>
+            </div>
+            <div class="panel-table-body" id="district-list"></div>
+          </div>
+        </div>
+
+        <!-- Pincodes View -->
+        <div class="panel-view" id="view-pincodes">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <span class="panel-card-title" id="pincode-panel-title">Pincodes</span>
+              <div class="panel-header-actions">
+                <button class="panel-back-btn" onclick="showDistricts()">Back</button>
+                <button class="panel-close-btn" onclick="showAnalytics()">&times;</button>
+              </div>
+            </div>
+            <div class="panel-table-header pincode-grid">
+              <span class="col-left">Pincode</span>
+              <span class="col-left">Post Office</span>
+              <span class="col-right">Total</span>
+              <span class="col-right">Pending</span>
+              <span class="col-right">Completion %</span>
+            </div>
+            <div class="panel-table-body" id="pincode-list"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Dashboard JS -->
+  <script src="app.js"></script>
+
+</body>
+</html>
