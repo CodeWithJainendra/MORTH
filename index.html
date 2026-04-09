@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MORTH Dashboard</title>
+  <title>MORTH - Road Safety Dashboard</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -22,11 +22,11 @@
   <!-- Header -->
   <header class="header">
     <div class="header-left">
-      <span class="header-logo material-icons-outlined">account_balance</span>
-      <h1 class="header-title">MORTH Dashboard</h1>
+      <span class="header-logo material-icons-outlined">shield</span>
+      <h1 class="header-title">MORTH Road Safety Dashboard</h1>
     </div>
     <div class="header-right">
-      <span class="header-subtitle">Ministry of Road Transport & Highways</span>
+      <span class="header-subtitle">Ministry of Road Transport & Highways — Blackspot & Accident Analysis</span>
     </div>
   </header>
 
@@ -37,44 +37,55 @@
     <div class="stat-cards">
       <div class="stat-card" data-color="blue">
         <div class="stat-card-content">
-          <span class="stat-card-title">Total Projects</span>
-          <span class="stat-card-count" id="card-total">0</span>
+          <span class="stat-card-title">Total Accidents</span>
+          <span class="stat-card-count" id="card-accidents">1,33,765</span>
         </div>
         <div class="stat-card-icon blue-bg">
-          <span class="material-icons-outlined">folder_open</span>
+          <span class="material-icons-outlined">car_crash</span>
         </div>
         <div class="stat-card-accent blue-accent"></div>
       </div>
 
       <div class="stat-card" data-color="purple">
         <div class="stat-card-content">
-          <span class="stat-card-title">Completed</span>
-          <span class="stat-card-count" id="card-completed">0</span>
+          <span class="stat-card-title">Total NH Length</span>
+          <span class="stat-card-count" id="card-length">11,379.9 km</span>
         </div>
         <div class="stat-card-icon purple-bg">
-          <span class="material-icons-outlined">check_circle</span>
+          <span class="material-icons-outlined">straighten</span>
         </div>
         <div class="stat-card-accent purple-accent"></div>
       </div>
 
+      <div class="stat-card" data-color="red">
+        <div class="stat-card-content">
+          <span class="stat-card-title">Fatal Accidents</span>
+          <span class="stat-card-count" id="card-fatalities">43,506</span>
+        </div>
+        <div class="stat-card-icon red-bg">
+          <span class="material-icons-outlined">dangerous</span>
+        </div>
+        <div class="stat-card-accent red-accent"></div>
+      </div>
+
       <div class="stat-card" data-color="orange">
         <div class="stat-card-content">
-          <span class="stat-card-title">In Progress</span>
-          <span class="stat-card-count" id="card-progress">0</span>
+          <span class="stat-card-title">Grievous Injuries</span>
+          <span class="stat-card-count" id="card-grievous">74,321</span>
         </div>
         <div class="stat-card-icon orange-bg">
-          <span class="material-icons-outlined">pending_actions</span>
+          <span class="material-icons-outlined">personal_injury</span>
         </div>
         <div class="stat-card-accent orange-accent"></div>
       </div>
 
       <div class="stat-card" data-color="green">
         <div class="stat-card-content">
-          <span class="stat-card-title">Total Length (km)</span>
-          <span class="stat-card-count" id="card-length">0</span>
+          <span class="stat-card-title">Black Corridors</span>
+          <span class="stat-card-count" id="card-corridors">10,867</span>
         </div>
         <div class="stat-card-icon green-bg">
-          <span class="material-icons-outlined">straighten</span>
+          <span class="material-icons-outlined">crisis_alert</span>
         </div>
         <div class="stat-card-accent green-accent"></div>
       </div>
@@ -87,7 +98,7 @@
       <div class="map-wrapper">
         <div class="map-paper">
           <div class="map-header">
-            <h2 class="map-title">Map Analysis</h2>
+            <h2 class="map-title">Blackspot Map Analysis</h2>
           </div>
 
           <div class="map-container" id="map-container">
@@ -107,11 +118,12 @@
 
             <!-- Legend -->
             <div class="map-legend" id="map-legend">
-              <div class="legend-title">Completion %</div>
-              <div class="legend-item"><span class="legend-color" style="background:#2E7D32"></span> &gt; 90%</div>
-              <div class="legend-item"><span class="legend-color" style="background:#8BC34A"></span> 80% - 90%</div>
-              <div class="legend-item"><span class="legend-color" style="background:#FFC107"></span> 70% - 80%</div>
-              <div class="legend-item"><span class="legend-color" style="background:#F44336"></span> &lt; 70%</div>
+              <div class="legend-title">Accident Severity</div>
+              <div class="legend-item"><span class="legend-color" style="background:#b71c1c"></span> Very High (&gt;15K)</div>
+              <div class="legend-item"><span class="legend-color" style="background:#F44336"></span> High (10K-15K)</div>
+              <div class="legend-item"><span class="legend-color" style="background:#FF9800"></span> Medium (5K-10K)</div>
+              <div class="legend-item"><span class="legend-color" style="background:#FFC107"></span> Low (&lt;5K)</div>
+              <div class="legend-item"><span class="legend-color" style="background:#e0e0e0"></span> No Data</div>
             </div>
           </div>
         </div>
@@ -120,32 +132,42 @@
       <!-- Right: Details Panel -->
       <div class="right-panel" id="right-panel">
 
-        <!-- Analytics View (default) -->
+        <!-- Analytics View (default) — Top States -->
         <div class="panel-view active" id="view-analytics">
           <div class="analytics-card">
             <div class="analytics-header">
               <span class="material-icons-outlined">bar_chart</span>
-              <span>State-wise Summary</span>
+              <span>Top States — Fatal & Grievous</span>
             </div>
             <div class="analytics-body" id="state-summary-list">
-              <div class="analytics-placeholder">Click a state on the map to view details</div>
+              <div class="analytics-placeholder">Loading...</div>
             </div>
           </div>
         </div>
 
-        <!-- Districts View -->
+        <!-- State Detail View -->
+        <div class="panel-view" id="view-state-detail">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <span class="panel-card-title" id="state-detail-title">State Details</span>
+              <button class="panel-close-btn" onclick="showAnalytics()">&times;</button>
+            </div>
+            <div class="panel-table-body" id="state-detail-body">
+            </div>
+          </div>
+        </div>
+
+        <!-- Districts View (map drill-down) -->
         <div class="panel-view" id="view-districts">
           <div class="panel-card">
             <div class="panel-card-header">
               <span class="panel-card-title" id="district-panel-title">Districts</span>
-              <button class="panel-close-btn" onclick="showAnalytics()">&times;</button>
+              <div class="panel-header-actions">
+                <button class="panel-back-btn" onclick="resetToCountry()">Back</button>
+                <button class="panel-close-btn" onclick="showAnalytics()">&times;</button>
+              </div>
             </div>
-            <div class="panel-table-header district-grid">
-              <span class="col-left">District Name</span>
-              <span class="col-right">Total</span>
-              <span class="col-right">Pending</span>
-              <span class="col-right">Completion %</span>
-            </div>
+            <div id="state-info-bar"></div>
             <div class="panel-table-body" id="district-list"></div>
           </div>
         </div>
@@ -156,22 +178,55 @@
             <div class="panel-card-header">
               <span class="panel-card-title" id="pincode-panel-title">Pincodes</span>
               <div class="panel-header-actions">
-                <button class="panel-back-btn" onclick="showDistricts()">Back</button>
-                <button class="panel-close-btn" onclick="showAnalytics()">&times;</button>
+                <button class="panel-back-btn" onclick="openStateMapView(selectedStateName)">Back</button>
+                <button class="panel-close-btn" onclick="resetToCountry()">&times;</button>
               </div>
-            </div>
-            <div class="panel-table-header pincode-grid">
-              <span class="col-left">Pincode</span>
-              <span class="col-left">Post Office</span>
-              <span class="col-right">Total</span>
-              <span class="col-right">Pending</span>
-              <span class="col-right">Completion %</span>
             </div>
             <div class="panel-table-body" id="pincode-list"></div>
           </div>
         </div>
 
       </div>
+    </div>
+
+    <!-- Bottom Section: Agency + Rankings + Bars -->
+    <div class="bottom-sections">
+
+      <!-- Agency-wise Data -->
+      <div class="section-card agency-section">
+        <div class="section-header">
+          <span class="material-icons-outlined">domain</span>
+          <span>Agency-wise Summary</span>
+        </div>
+        <div class="section-body">
+          <table class="data-table" id="agency-table">
+            <thead>
+              <tr>
+                <th class="col-left">Agency</th>
+                <th>Length (km)</th>
+                <th>Corridors</th>
+                <th>Accidents</th>
+                <th>Fatalities</th>
+              </tr>
+            </thead>
+            <tbody id="agency-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Rankings -->
+      <div class="rankings-row">
+        <div class="section-card ranking-card" id="ranking-nh-length"></div>
+        <div class="section-card ranking-card" id="ranking-nh-fg"></div>
+        <div class="section-card ranking-card" id="ranking-district-fg"></div>
+      </div>
+
+      <!-- Bar Chart Sections -->
+      <div class="bars-row">
+        <div class="section-card bar-card" id="bar-crashes"></div>
+        <div class="section-card bar-card" id="bar-fatalities"></div>
+      </div>
+
     </div>
   </div>
 
